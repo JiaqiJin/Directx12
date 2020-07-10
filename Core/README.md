@@ -1,9 +1,9 @@
-#Chapter One
+# Chapter One
 
-##Header files and reference library files
-### To call D3D12, the first step is to include header file and link all the lib.
+## Header files and reference library files
+###### To call D3D12, the first step is to include header file and link all the lib.
 
-'''
+```
 #include <SDKDDKVer.h>
 #define WIN32_LEAN_AND_MEAN // Exclude rarely used data from the Windows header
 #include <windows.h>
@@ -35,6 +35,6 @@ using namespace DirectX;
 #define KAWAII_WND_TITLE   _T("DirectX12 Trigger Sample")
  
 #define KAWAII_THROW_IF_FAILED(hr) if (FAILED(hr)){ throw CGRSCOMException(hr); }
-'''
+```
 
 The above code is the whole preparation.
