@@ -434,7 +434,7 @@ bool D3DApp::InitDirect3D()
 	// Fallback to WARP device.
 	if (FAILED(hardwareResult))
 	{
-		ComPtr<IDXGIAdapter> pWarpAdapter;
+		ComPtr<IDXGIAdapter> pWarpAdapter; //Create the new display subsystem(video card)
 		ThrowIfFailed(mdxgiFactory->EnumWarpAdapter(IID_PPV_ARGS(&pWarpAdapter)));
 
 		ThrowIfFailed(D3D12CreateDevice(

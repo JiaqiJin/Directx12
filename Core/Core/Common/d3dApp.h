@@ -86,9 +86,9 @@ protected:
     // Used to keep track of the �delta-time?and game time (?.4).
     GameTimer mTimer;
 
-    Microsoft::WRL::ComPtr<IDXGIFactory4> mdxgiFactory;
-    Microsoft::WRL::ComPtr<IDXGISwapChain> mSwapChain;
-    Microsoft::WRL::ComPtr<ID3D12Device> md3dDevice;
+    Microsoft::WRL::ComPtr<IDXGIFactory4> mdxgiFactory;//DXGI objects (which handle full screen transitions).
+    Microsoft::WRL::ComPtr<IDXGISwapChain> mSwapChain; 
+    Microsoft::WRL::ComPtr<ID3D12Device> md3dDevice; //"CREATE"all Other Direc3D interface objetc(resources,command list ...).
 
     Microsoft::WRL::ComPtr<ID3D12Fence> mFence;
     UINT64 mCurrentFence = 0;
