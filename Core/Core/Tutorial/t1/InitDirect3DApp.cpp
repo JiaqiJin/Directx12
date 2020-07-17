@@ -1,9 +1,10 @@
 #include <DirectXColors.h>
 #include "d3dApp.h"
+#include "D3D12App.h"
 
 using namespace DirectX;
 
-class InitDirect3DApp : public D3DApp
+class InitDirect3DApp : public D3D12App
 {
 public:
 	InitDirect3DApp(HINSTANCE hInstance);
@@ -42,7 +43,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance,
 }
 
 InitDirect3DApp::InitDirect3DApp(HINSTANCE hInstance)
-	: D3DApp(hInstance)
+	: D3D12App(hInstance)
 {
 }
 
@@ -52,7 +53,7 @@ InitDirect3DApp::~InitDirect3DApp()
 
 bool InitDirect3DApp::Initialize()
 {
-	if (!D3DApp::Initialize())
+	if (!D3D12App::Initialize())
 		return false;
 
 	return true;
@@ -60,7 +61,7 @@ bool InitDirect3DApp::Initialize()
 
 void InitDirect3DApp::OnResize()
 {
-	D3DApp::OnResize();
+	D3D12App::OnResize();
 }
 
 void InitDirect3DApp::Update(const GameTimer& gt)

@@ -90,20 +90,20 @@ protected:
     Microsoft::WRL::ComPtr<IDXGISwapChain> mSwapChain; 
     Microsoft::WRL::ComPtr<ID3D12Device> md3dDevice; //"CREATE"all Other Direc3D interface objetc(resources,command list ...).
 
-    Microsoft::WRL::ComPtr<ID3D12Fence> mFence;
+    Microsoft::WRL::ComPtr<ID3D12Fence> mFence; // CPU/GPU Syncronization.
     UINT64 mCurrentFence = 0;
 
-    Microsoft::WRL::ComPtr<ID3D12CommandQueue> mCommandQueue;
-    Microsoft::WRL::ComPtr<ID3D12CommandAllocator> mDirectCmdListAlloc;
-    Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> mCommandList;
+    Microsoft::WRL::ComPtr<ID3D12CommandQueue> mCommandQueue; // submititing the command list, excution ...
+    Microsoft::WRL::ComPtr<ID3D12CommandAllocator> mDirectCmdListAlloc; //storage for GPU commands
+    Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> mCommandList; //Encapsulates a list of graphics commands for rendering
 
     static const int SwapChainBufferCount = 2;
     int mCurrBackBuffer = 0;
     Microsoft::WRL::ComPtr<ID3D12Resource> mSwapChainBuffer[SwapChainBufferCount];
     Microsoft::WRL::ComPtr<ID3D12Resource> mDepthStencilBuffer;
-
-    Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> mRtvHeap;
-    Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> mDsvHeap;
+    //The desciprto heap is use for resource for GPU, and this can obtain resource data and othe info.
+    Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> mRtvHeap;  //Heap fpr Renter Target View.
+    Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> mDsvHeap;  //Heap for Depth/Stencil View.
 
     D3D12_VIEWPORT mScreenViewport;
     D3D12_RECT mScissorRect;
