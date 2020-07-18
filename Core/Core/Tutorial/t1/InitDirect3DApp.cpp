@@ -18,7 +18,7 @@ private:
 	virtual void Draw(const GameTimer& gt)override;
 
 };
-
+// The main(WinMain) function is equivalent to Main entry function in c++
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance,
 	PSTR cmdLine, int showCmd)
 {
@@ -68,7 +68,10 @@ void InitDirect3DApp::Update(const GameTimer& gt)
 {
 
 }
-
+/*
+The draw functions sets the varius resources to the rendering pepiline,
+1- Reset the command allocator and the commnad list, the purpose is to reset the command and list for later reuse.
+*/
 void InitDirect3DApp::Draw(const GameTimer& gt)
 {
 	// Reuse the memory associated with command recording.
@@ -79,6 +82,7 @@ void InitDirect3DApp::Draw(const GameTimer& gt)
 	// Reusing the command list reuses memory.
 	ThrowIfFailed(mCommandList->Reset(mDirectCmdListAlloc.Get(), nullptr));
 
+	//The transition of the back buffer  resources from rendering state to the rendering target state.
 	// Indicate a state transition on the resource usage.
 	mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(CurrentBackBuffer(),
 		D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET));
@@ -88,20 +92,22 @@ void InitDirect3DApp::Draw(const GameTimer& gt)
 	mCommandList->RSSetScissorRects(1, &mScissorRect);
 
 	// Clear the back buffer and depth buffer.
+	//The first step is obtain the descriptor handler in the heap
 	mCommandList->ClearRenderTargetView(CurrentBackBufferView(), Colors::LightSteelBlue, 0, nullptr);
 	mCommandList->ClearDepthStencilView(DepthStencilView(), D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr);
 
-	// Specify the buffers we are going to render to.
+	// Specify the buffers we are going to render to, taht is specify RTV and DSV.
 	mCommandList->OMSetRenderTargets(1, &CurrentBackBufferView(), true, &DepthStencilView());
 
 	// Indicate a state transition on the resource usage.
+	//When we rendering complete, we need change the state of the back buffer to the presnet state, and the push it to the formt buffer.
 	mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(CurrentBackBuffer(),
 		D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT));
 
 	// Done recording commands.
 	ThrowIfFailed(mCommandList->Close());
 
-	// Add the command list to the queue for execution.
+	// Add the command list to the queue for execution after the CPU prepare all the commands.
 	ID3D12CommandList* cmdsLists[] = { mCommandList.Get() };
 	mCommandQueue->ExecuteCommandLists(_countof(cmdsLists), cmdsLists);
 

@@ -48,13 +48,17 @@ D3D12App::~D3D12App()
 	if (md3dDevice != nullptr)
 		FlushCommandQueue();
 }
-
+/*
+Then we create a new Run function, copy the previous message loop code into it, and slightly adjust its structure.
+If there is no message processing, the game screen and the logic calculation wi be excute.
+*/
 int D3D12App::Run()
 {
-	MSG msg = { 0 };
+	//Define the message structure
+	MSG msg = { 0 }; // message
 
 	mTimer.Reset();
-
+	
 	while (msg.message != WM_QUIT)
 	{
 		// If there are Window messages then process them.
@@ -91,12 +95,13 @@ bool D3D12App::Initialize()
 
 	if (!InitDirect3D())
 		return false;
+
 	// Do the initial resize code.
 	OnResize();
 
 	return true;
 }
-
+// Window initialization description estructure
 bool D3D12App::InitMainWindow()
 {
 	WNDCLASS wc;
@@ -110,7 +115,7 @@ bool D3D12App::InitMainWindow()
 	wc.hbrBackground = (HBRUSH)GetStockObject(NULL_BRUSH);
 	wc.lpszMenuName = 0;
 	wc.lpszClassName = L"MainWnd";
-
+	//failed register window 
 	if (!RegisterClass(&wc))
 	{
 		MessageBox(0, L"RegisterClass Failed.", 0, 0);
@@ -122,7 +127,7 @@ bool D3D12App::InitMainWindow()
 	AdjustWindowRect(&R, WS_OVERLAPPEDWINDOW, false);
 	int width = R.right - R.left;
 	int height = R.bottom - R.top;
-
+	//Create window
 	mhMainWnd = CreateWindow(L"MainWnd", mMainWndCaption.c_str(),
 		WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT, width, height, 0, 0, mhAppInst, 0);
 	if (!mhMainWnd)
@@ -130,7 +135,7 @@ bool D3D12App::InitMainWindow()
 		MessageBox(0, L"CreateWindow Failed.", 0, 0);
 		return false;
 	}
-
+	//If the window created successfully, the window is displayed and update
 	ShowWindow(mhMainWnd, SW_SHOW);
 	UpdateWindow(mhMainWnd);
 
@@ -162,21 +167,31 @@ void D3D12App::OnResize()
 		DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH));
 
 	mCurrBackBuffer = 0;
+
 	//----------------------------------------
-	//Render target vire creation
+	//Render target View -> maintain the location in video memory to render into, in most case will be the back buffer.
+	/*
+	with the descriptor heap, we can create the descriptor in heap.
+	We first create the RTV, 1- create the RTV handler from RTV heap
+	*/
 	CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHeapHandle(mRtvHeap->GetCPUDescriptorHandleForHeapStart());
 	for (UINT i = 0; i < SwapChainBufferCount; i++)
 	{
-		// Get the ith buffer in the swap chain.
+		// Get the buffer in the swap chain.
 		ThrowIfFailed(mSwapChain->GetBuffer(i, IID_PPV_ARGS(&mSwapChainBuffer[i])));
 		// Create an RTV to it.
 		md3dDevice->CreateRenderTargetView(mSwapChainBuffer[i].Get(), nullptr, rtvHeapHandle);
-		// Next entry in heap.
+		// Next entry buffer in the descriptor heap.
 		rtvHeapHandle.Offset(1, mRtvDescriptorSize);
 	}
 
 	//----------------------------------------
-	// Create the depth/stencil buffer and view.
+	// Create the depth/stencil buffer View.
+	/*
+	After creating RTV, we are Create the DSV. First we creathe the DS resources in CPU, the submit the DS
+	resource to GPU memory, and finally we create the DSV to asociate the DS resources int the DSV handle.
+	*/
+	//Create the template data resource in CPU
 	D3D12_RESOURCE_DESC depthStencilDesc;
 	depthStencilDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
 	depthStencilDesc.Alignment = 0;
@@ -191,13 +206,13 @@ void D3D12App::OnResize()
 	depthStencilDesc.Layout = D3D12_TEXTURE_LAYOUT_UNKNOWN;
 	depthStencilDesc.Flags = D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL;
 	//Clear calls that match the
-	//optimized clear value can potentially be faster than clear calls that do not match the optimized clear value.
+	//Clear the optimized value of the resource, improve the execution speed of the clear operation
 	D3D12_CLEAR_VALUE optClear;
 	optClear.Format = mDepthStencilFormat;
 	optClear.DepthStencil.Depth = 1.0f;
 	optClear.DepthStencil.Stencil = 0;
 
-	//creates and commits a resource to a particular heap with the properties we specify
+	//Submit the DS resource to the GPU memory -> CreateCommittedResource
 	ThrowIfFailed(md3dDevice->CreateCommittedResource(
 		&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT), //the property of the heap we want to commit the resource,
 		D3D12_HEAP_FLAG_NONE, //Additional flags about the heap we want to commit the resource.
@@ -206,7 +221,7 @@ void D3D12App::OnResize()
 		&optClear,
 		IID_PPV_ARGS(mDepthStencilBuffer.GetAddressOf())));
 
-	//create d/s view to be bound to pepiline
+	//create DS VIEW to be bound to pepiline
 	//-----------
 	// Create descriptor to mip level 0 of entire resource using the format of the resource.
 	D3D12_DEPTH_STENCIL_VIEW_DESC dsvDesc;
@@ -216,13 +231,25 @@ void D3D12App::OnResize()
 	dsvDesc.Texture2D.MipSlice = 0;
 	// Create descriptor to mip level 0 of entire resourceusing the
 	// format of the resource.
-	md3dDevice->CreateDepthStencilView(mDepthStencilBuffer.Get(), &dsvDesc, DepthStencilView());
+	md3dDevice->CreateDepthStencilView(mDepthStencilBuffer.Get(), 
+		&dsvDesc, 
+		DepthStencilView());// mDsvHeap handle
+
+	/*
+	After we creating the descriptor, we nned mark the staturs of the DS ,because resources have different
+	functions in different period(read-only, write ...).
+	Transition function under ResourceBarrier
+	*/
 	// Transition the resource from its initial state to be used as a depth buffer.
 	mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(mDepthStencilBuffer.Get(),
-		D3D12_RESOURCE_STATE_COMMON, D3D12_RESOURCE_STATE_DEPTH_WRITE));
-
+		D3D12_RESOURCE_STATE_COMMON, //state before the conversion
+		D3D12_RESOURCE_STATE_DEPTH_WRITE)); // the coverted state which is a readable depth map
+	/*
+	After the all command have entry the cmdList, you need to use the ExecuteCommandListsfunction to transfer the command 
+	from the command list to command queue. CPU->GPU
+	*/
 	// Execute the resize commands.
-	ThrowIfFailed(mCommandList->Close());
+	ThrowIfFailed(mCommandList->Close()); //The command list must be close before passing 
 	ID3D12CommandList* cmdsLists[] = { mCommandList.Get() };
 	mCommandQueue->ExecuteCommandLists(_countof(cmdsLists), cmdsLists);
 
@@ -242,7 +269,7 @@ void D3D12App::OnResize()
 
 LRESULT D3D12App::MsgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
-	switch (msg)
+	switch (msg) //messages processing
 	{
 		// WM_ACTIVATE is sent when the window is activated or deactivated.  
 		// We pause the game when the window is deactivated and unpause it 
@@ -407,11 +434,14 @@ bool D3D12App::InitDirect3D()
 			D3D_FEATURE_LEVEL_11_0,
 			IID_PPV_ARGS(&md3dDevice)));
 	}
-
+	//Create fence throght the device, for CPU and GPU synchronized later
 	ThrowIfFailed(md3dDevice->CreateFence(0, D3D12_FENCE_FLAG_NONE,
 		IID_PPV_ARGS(&mFence)));
 
-
+	/*
+	The we get the descriptor size, which allows us to know the size of each element in the descriptor heap(the size of the descripto varies
+	on differente GPU platfomrs), so we can later offset the address to find the heap of the descripto element.
+	*/
 	mRtvDescriptorSize = md3dDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);// The descriptor heap for the render-target view.
 	mDsvDescriptorSize = md3dDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_DSV);//The descriptor heap for the depth-stencil view.
 	//The descriptor heap for the combination of constant-buffer, shader-resource, and unordered-access views.
@@ -421,10 +451,11 @@ bool D3D12App::InitDirect3D()
 	// All Direct3D 11 capable devices support 4X MSAA for all render 
 	// target formats, so we only need to check quality support.
 	D3D12_FEATURE_DATA_MULTISAMPLE_QUALITY_LEVELS msQualityLevels;
-	msQualityLevels.Format = mBackBufferFormat;
+	msQualityLevels.Format = mBackBufferFormat; //DXGI_FORMAT_R8G8B8A8_UNORM;
 	msQualityLevels.SampleCount = 4;
 	msQualityLevels.Flags = D3D12_MULTISAMPLE_QUALITY_LEVELS_FLAG_NONE;
 	msQualityLevels.NumQualityLevels = 0;
+	//The current graphics driver supports MSAA multiple sampling 
 	ThrowIfFailed(md3dDevice->CheckFeatureSupport(
 		D3D12_FEATURE_MULTISAMPLE_QUALITY_LEVELS,
 		&msQualityLevels,
@@ -444,31 +475,40 @@ bool D3D12App::InitDirect3D()
 
 	return true;
 }
-
+/*
+After the graphic support MSAA, we create the command list, commnad allocator and command queue.
+The relationship between the threes is : first CPU create the command list, and the associate the command on
+the command allocator, finally the commnand list is passed to the command queue for GPU processing.
+*/
 void D3D12App::CreateCommandObjects()
 {
+	//Command queue description
 	D3D12_COMMAND_QUEUE_DESC queueDesc = {};
-	queueDesc.Type = D3D12_COMMAND_LIST_TYPE_DIRECT;
+	queueDesc.Type = D3D12_COMMAND_LIST_TYPE_DIRECT; 
 	queueDesc.Flags = D3D12_COMMAND_QUEUE_FLAG_NONE;
+	//Create the command queue.
 	ThrowIfFailed(md3dDevice->CreateCommandQueue(&queueDesc, IID_PPV_ARGS(&mCommandQueue)));
-
+	//Create the command allocator
 	ThrowIfFailed(md3dDevice->CreateCommandAllocator(
 		D3D12_COMMAND_LIST_TYPE_DIRECT,
 		IID_PPV_ARGS(mDirectCmdListAlloc.GetAddressOf())));
-
+	//Create the command list
 	ThrowIfFailed(md3dDevice->CreateCommandList(
 		0,
 		D3D12_COMMAND_LIST_TYPE_DIRECT,
 		mDirectCmdListAlloc.Get(), // Associated command allocator
-		nullptr,                   // Initial PipelineStateObject
+		nullptr,                   // Initial PipelineStateObject PSO
 		IID_PPV_ARGS(mCommandList.GetAddressOf())));
 	// Start off in a closed state.  This is because the first time we refer 
 	// to the command list we will Reset it, and it needs to be closed before
 	// calling Reset.
-	mCommandList->Close();
+	mCommandList->Close();//it must colose before resetting the command list
 
 }
-
+/*
+The next step is create the swap chain, which contain the rendering target source, taht is the back buffer resources.
+We create the swap chain form the through thr IDXGIFactory interfaces
+*/
 void D3D12App::CreateSwapChain()
 {
 	// Release the previous swapchain we will be recreating.
@@ -483,13 +523,13 @@ void D3D12App::CreateSwapChain()
 	sd.BufferDesc.Height = mClientHeight;
 	sd.BufferDesc.RefreshRate.Numerator = 60;
 	sd.BufferDesc.RefreshRate.Denominator = 1;
-	sd.BufferDesc.Format = mBackBufferFormat; // Buffer display format
+	sd.BufferDesc.Format = mBackBufferFormat; // Buffer display format DXGI_FORMAT_R8G8B8A8_UNORM
 	sd.BufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED; //Progressive vs. interlaced
 	sd.BufferDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED; // how the image is stretched
 	sd.SampleDesc.Count = m4xMsaaState ? 4 : 1;
 	sd.SampleDesc.Quality = m4xMsaaState ? (m4xMsaaQuality - 1) : 0;
 	sd.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT; //we are going to be rendering to the back buffer
-	sd.BufferCount = SwapChainBufferCount; //the number of the buffer countto use in the swap chain.
+	sd.BufferCount = SwapChainBufferCount; //the number of the buffer counnt use in the swap chain (2).
 	sd.OutputWindow = mhMainWnd; //A handle to the window we are rendering into.
 	sd.Windowed = true; //full screen mode.
 	sd.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;
@@ -504,10 +544,15 @@ void D3D12App::CreateSwapChain()
 
 }
 
+/*
+Now we create the descriptor heap, which is a continuos memory space where descripto are storesd.
+This is the double back buffer, we need create and RTV heap that store 2 RTVs, and there is onnly 
+one deep template buffer, so we create DVS heap of DSV.
+*/
 void D3D12App::CreateRtvAndDsvDescriptorHeaps()
 {
 	D3D12_DESCRIPTOR_HEAP_DESC rtvHeapDesc;
-	rtvHeapDesc.NumDescriptors = SwapChainBufferCount;
+	rtvHeapDesc.NumDescriptors = SwapChainBufferCount; // store 2 RTVs
 	rtvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
 	rtvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
 	rtvHeapDesc.NodeMask = 0;
@@ -565,7 +610,12 @@ void D3D12App::LogAdapters()
 		ReleaseCom(adapterList[i]);
 	}
 }
-
+/*
+In order to synchronize the CPU and GPU, we have to create the fence interfaz before.
+The inicial value of the fence is 0, now we define a current fence value as cero.
+After the CPU transmit the command to the GPU, the current value ++(CPU fence ++),
+and the GPU process the command form the CPU
+*/
 void D3D12App::FlushCommandQueue()
 {
 	// Advance the fence value to mark commands up to this fence point.
