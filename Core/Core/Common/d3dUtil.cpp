@@ -35,6 +35,11 @@ ComPtr<ID3DBlob> d3dUtil::LoadBinary(const std::wstring& filename)
     return blob;
 }
 
+/*
+The Logic : we commit the resources to the upload head when we copy the data from CPU to GPU(we create the intermeduiate upload buffer)
+After we create the upload buffer, we copy the vertex data from system memory to the upload buffer, and we copy the vertex data fromt the 
+upload buffer to actual vertex buffer.
+*/
 Microsoft::WRL::ComPtr<ID3D12Resource> d3dUtil::CreateDefaultBuffer(
     ID3D12Device* device,
     ID3D12GraphicsCommandList* cmdList,
@@ -63,19 +68,21 @@ Microsoft::WRL::ComPtr<ID3D12Resource> d3dUtil::CreateDefaultBuffer(
         nullptr,
         IID_PPV_ARGS(uploadBuffer.GetAddressOf())));
 
-
-    // Describe the data we want to copy into the default buffer.
-    D3D12_SUBRESOURCE_DATA subResourceData = {};
-    subResourceData.pData = initData;
-    subResourceData.RowPitch = byteSize;
-    subResourceData.SlicePitch = subResourceData.RowPitch;
-
     // Schedule to copy the data to the default buffer resource.  At a high level, the helper function UpdateSubresources
     // will copy the CPU memory into the intermediate upload heap.  Then, using ID3D12CommandList::CopySubresourceRegion,
     // the intermediate upload heap data will be copied to mBuffer.
     cmdList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(defaultBuffer.Get(),
         D3D12_RESOURCE_STATE_COMMON, D3D12_RESOURCE_STATE_COPY_DEST));
+
+    // Describe the data we want to copy into the default buffer.
+    D3D12_SUBRESOURCE_DATA subResourceData = {};
+    subResourceData.pData = initData; // pointer to sys mem which contain the data to initialize the buffer with
+    subResourceData.RowPitch = byteSize; // for the buffer, size of the data we are copy in byte
+    subResourceData.SlicePitch = subResourceData.RowPitch; //For buffers, the size of the data we are copying in bytes.
+    //copies data from CPU memor y to the upload heap,and upload heap to default heap.
     UpdateSubresources<1>(cmdList, defaultBuffer.Get(), uploadBuffer.Get(), 0, 0, 1, &subResourceData);
+
+    //Transition the resource from the CPY_DEST state to GENERIC_READ.
     cmdList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(defaultBuffer.Get(),
         D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_GENERIC_READ));
 

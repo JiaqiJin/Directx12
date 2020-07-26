@@ -142,7 +142,7 @@ bool D3D12App::InitMainWindow()
 	return true;
 }
 
-
+//The back buffer and d/s view need to be recreate once the window is resized.
 void D3D12App::OnResize()
 {
 	assert(md3dDevice);

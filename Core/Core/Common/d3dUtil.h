@@ -178,13 +178,13 @@ struct MeshGeometry
     // Use this container to define the Submesh geometries so we can draw
     // the Submeshes individually.
     std::unordered_map<std::string, SubmeshGeometry> DrawArgs;
-
+    //Vertex Buffer Descriptor
     D3D12_VERTEX_BUFFER_VIEW VertexBufferView()const
     {
         D3D12_VERTEX_BUFFER_VIEW vbv;
-        vbv.BufferLocation = VertexBufferGPU->GetGPUVirtualAddress();
-        vbv.StrideInBytes = VertexByteStride;
-        vbv.SizeInBytes = VertexBufferByteSize;
+        vbv.BufferLocation = VertexBufferGPU->GetGPUVirtualAddress(); // the virtual address of the vertex buffer resources we want to create a view
+        vbv.StrideInBytes = VertexByteStride;// the number og the byte to view in vertex buffer
+        vbv.SizeInBytes = VertexBufferByteSize; //the size of the vertex buffer element.
 
         return vbv;
     }

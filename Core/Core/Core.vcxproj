@@ -95,6 +95,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>dxguid.lib;D3D12.lib;d3dcompiler.lib;dxgi.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <FxCompile />
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -110,6 +111,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>dxguid.lib;D3D12.lib;d3dcompiler.lib;dxgi.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <FxCompile />
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -145,21 +147,22 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Common\Camera.cpp" />
+    <ClCompile Include="Common\d3dApp.cpp" />
     <ClCompile Include="Common\d3dUtil.cpp" />
     <ClCompile Include="Common\GameTimer.cpp" />
     <ClCompile Include="Common\GeometryGenerator.cpp" />
     <ClCompile Include="Common\MathHelper.cpp" />
-    <ClCompile Include="Tutorial\t1\D3D12App.cpp" />
-    <ClCompile Include="Tutorial\t1\InitDirect3DApp.cpp" />
+    <ClCompile Include="Tutorial\t2\main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Common\Camera.h" />
+    <ClInclude Include="Common\d3dApp.h" />
     <ClInclude Include="Common\d3dUtil.h" />
     <ClInclude Include="Common\GameTimer.h" />
     <ClInclude Include="Common\GeometryGenerator.h" />
     <ClInclude Include="Common\MathHelper.h" />
     <ClInclude Include="Common\UploadBuffer.h" />
-    <ClInclude Include="Tutorial\t1\D3D12App.h" />
+    <ClInclude Include="Tutorial\t2\DrawApp.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

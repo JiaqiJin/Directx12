@@ -93,7 +93,7 @@ void InitDirect3DApp::Draw(const GameTimer& gt)
 
 	// Clear the back buffer and depth buffer.
 	//The first step is obtain the descriptor handler in the heap
-	mCommandList->ClearRenderTargetView(CurrentBackBufferView(), Colors::LightSteelBlue, 0, nullptr);
+	mCommandList->ClearRenderTargetView(CurrentBackBufferView(), Colors::LightPink, 0, nullptr);
 	mCommandList->ClearDepthStencilView(DepthStencilView(), D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr);
 
 	// Specify the buffers we are going to render to, taht is specify RTV and DSV.
