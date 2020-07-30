@@ -56,7 +56,10 @@ public:
     }
 
 private:
-    Microsoft::WRL::ComPtr<ID3D12Resource> mUploadBuffer; 
+    /*
+    We can upload data from CPU to the constant buffer resources.
+    */
+    Microsoft::WRL::ComPtr<ID3D12Resource> mUploadBuffer;
     BYTE* mMappedData = nullptr;
 
     UINT mElementByteSize = 0;

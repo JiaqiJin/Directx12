@@ -59,7 +59,11 @@ private:
 
 	ComPtr<ID3DBlob> mvsByteCode = nullptr;
 	ComPtr<ID3DBlob> mpsByteCode = nullptr;
-	//description of the vertex structure
+
+	//description and corresponds to one component in the vertex structure
+	//1- COMPONENT  = position, DXGI_FORMAT_R32G32B32_FLOAT ...
+	//2- COMPONENT = color, ...
+	//.... we need a array structure to allocated all vertex description
 	std::vector<D3D12_INPUT_ELEMENT_DESC> mInputLayout;
 
 	XMFLOAT4X4 mWorld = MathHelper::Identity4x4();
@@ -285,7 +289,9 @@ void DrawApp::BuildBoxGeometry()
 	mBoxGeo->VertexBufferByteSize = vbByteSize; // the size
 	mBoxGeo->IndexFormat = DXGI_FORMAT_R16_UINT;
 	mBoxGeo->IndexBufferByteSize = ibByteSize;
-
+	//Concatenation of several buffers into large buffer if we have many object to draw
+	//Sphere indices	box Indices    Cylinder Indices 
+	//|-------------|----------------|------------------|
 	SubmeshGeometry submesh;
 	submesh.IndexCount = (UINT)indices.size();
 	submesh.StartIndexLocation = 0;
@@ -346,7 +352,7 @@ void DrawApp::BuildDescriptorHeaps()
 	D3D12_DESCRIPTOR_HEAP_DESC cbvHeapDesc;
 	cbvHeapDesc.NumDescriptors = 1;
 	cbvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
-	cbvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
+	cbvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE; //will access by shader programs
 	cbvHeapDesc.NodeMask = 0;
 	ThrowIfFailed(md3dDevice->CreateDescriptorHeap(&cbvHeapDesc,
 		IID_PPV_ARGS(&mCbvHeap)));
@@ -355,14 +361,14 @@ void DrawApp::BuildDescriptorHeaps()
 void DrawApp::BuildConstantBuffers()
 {
 	mObjectCB = std::make_unique<UploadBuffer<ObjectConstants>>(md3dDevice.Get(), 1, true);
-
+	//byte size of the constant buffer
 	UINT objCBByteSize = d3dUtil::CalcConstantBufferByteSize(sizeof(ObjectConstants));
-
+	//address to start of the  buffer
 	D3D12_GPU_VIRTUAL_ADDRESS cbAddress = mObjectCB->Resource()->GetGPUVirtualAddress();
 	// Offset to the ith object constant buffer in the buffer.
 	int boxCBufIndex = 0;
 	cbAddress += boxCBufIndex * objCBByteSize;
-
+	//Describe the subset of the constant buffer resource to bind to the HLSL.
 	D3D12_CONSTANT_BUFFER_VIEW_DESC cbvDesc;
 	cbvDesc.BufferLocation = cbAddress;
 	cbvDesc.SizeInBytes = d3dUtil::CalcConstantBufferByteSize(sizeof(ObjectConstants));
@@ -371,7 +377,11 @@ void DrawApp::BuildConstantBuffers()
 		&cbvDesc,
 		mCbvHeap->GetCPUDescriptorHandleForHeapStart());
 }
-
+/*
+The root signature only defines what resources the application will bind to the
+rendering pipeline
+Set with command list
+*/
 void DrawApp::BuildRootSignature()
 {
 	// Shader programs typically require resources as input (constant buffers,
@@ -384,6 +394,7 @@ void DrawApp::BuildRootSignature()
 	CD3DX12_ROOT_PARAMETER slotRootParameter[1];
 
 	// Create a single descriptor table of CBVs.
+	//Create the root parameter that expect a descriptor table of "1" CBV that give a register "0"
 	CD3DX12_DESCRIPTOR_RANGE cbvTable;
 	cbvTable.Init(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, 1, 0);
 	slotRootParameter[0].InitAsDescriptorTable(1, &cbvTable);
@@ -434,10 +445,10 @@ void DrawApp::BuildPSO()
 	psoDesc.DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT);
 	psoDesc.SampleMask = UINT_MAX; //Multisampling can take up to 32 samples.
 	psoDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
-	psoDesc.NumRenderTargets = 1;
-	psoDesc.RTVFormats[0] = mBackBufferFormat;
+	psoDesc.NumRenderTargets = 1;//The number of render targets we are using simultaneously.
+	psoDesc.RTVFormats[0] = mBackBufferFormat;//The render target formats.
 	psoDesc.SampleDesc.Count = m4xMsaaState ? 4 : 1;
 	psoDesc.SampleDesc.Quality = m4xMsaaState ? (m4xMsaaQuality - 1) : 0;
-	psoDesc.DSVFormat = mDepthStencilFormat;
+	psoDesc.DSVFormat = mDepthStencilFormat;//The format of the depth/stencil buffer
 	ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(&psoDesc, IID_PPV_ARGS(&mPSO)));
 }
