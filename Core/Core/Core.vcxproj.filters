@@ -33,7 +33,7 @@
     <ClCompile Include="Common\d3dApp.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Tutorial\t2\main.cpp">
+    <ClCompile Include="Tutorial\t3\Shapes\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -59,7 +59,7 @@
     <ClInclude Include="Common\d3dApp.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Tutorial\t2\DrawApp.h">
+    <ClInclude Include="Tutorial\t3\Shapes\ShapesApp.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
