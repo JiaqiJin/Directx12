@@ -36,6 +36,9 @@
     <ClCompile Include="Tutorial\t3\Shapes\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Tutorial\t3\FrameResource.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Common\d3dUtil.h">
@@ -62,5 +65,15 @@
     <ClInclude Include="Tutorial\t3\Shapes\ShapesApp.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Tutorial\t3\FrameResource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="Tutorial\HLSL\SimpleShaderPS.hlsl" />
+    <FxCompile Include="Tutorial\HLSL\SimpleShaderVS.hlsl" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Tutorial\HLSL\SimpleShader.hlsli" />
   </ItemGroup>
 </Project>
