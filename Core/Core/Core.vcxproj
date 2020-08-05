@@ -153,7 +153,7 @@
     <ClCompile Include="Common\GeometryGenerator.cpp" />
     <ClCompile Include="Common\MathHelper.cpp" />
     <ClCompile Include="Tutorial\t3\FrameResource.cpp" />
-    <ClCompile Include="Tutorial\t3\Shapes\main.cpp" />
+    <ClCompile Include="Tutorial\t3\Wave\main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Common\Camera.h" />
@@ -164,7 +164,7 @@
     <ClInclude Include="Common\MathHelper.h" />
     <ClInclude Include="Common\UploadBuffer.h" />
     <ClInclude Include="Tutorial\t3\FrameResource.h" />
-    <ClInclude Include="Tutorial\t3\Shapes\ShapesApp.h" />
+    <ClInclude Include="Tutorial\t3\Wave\LandAndWavesApp.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Tutorial\HLSL\SimpleShaderPS.hlsl">

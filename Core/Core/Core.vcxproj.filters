@@ -33,10 +33,10 @@
     <ClCompile Include="Common\d3dApp.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Tutorial\t3\Shapes\main.cpp">
+    <ClCompile Include="Tutorial\t3\FrameResource.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Tutorial\t3\FrameResource.cpp">
+    <ClCompile Include="Tutorial\t3\Wave\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -62,10 +62,10 @@
     <ClInclude Include="Common\d3dApp.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Tutorial\t3\Shapes\ShapesApp.h">
+    <ClInclude Include="Tutorial\t3\FrameResource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Tutorial\t3\FrameResource.h">
+    <ClInclude Include="Tutorial\t3\Wave\LandAndWavesApp.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
