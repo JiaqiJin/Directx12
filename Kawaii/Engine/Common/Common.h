@@ -8,7 +8,9 @@
 #include <unordered_map>
 #include <mutex>
 
+#if defined (_WIN64)
 #include <DirectXMath.h>
+#endif
 
 #ifndef DISABLE_COPY
 #define DISABLE_COPY(T)					\
@@ -35,3 +37,5 @@
 // COMMON HEADERS
 #include "PrimitiveTypes.h"
 #include "KawakawaiId.h"
+#include "Utility/Utilities.h"
+#include "Utility/MathTypes.h"
