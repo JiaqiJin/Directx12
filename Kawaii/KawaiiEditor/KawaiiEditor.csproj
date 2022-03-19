@@ -17,8 +17,4 @@
     <OutputPath>..\x64\Release\</OutputPath>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Folder Include="GameProject\" />
-  </ItemGroup>
-
 </Project>

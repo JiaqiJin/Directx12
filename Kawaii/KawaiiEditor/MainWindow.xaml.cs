@@ -1,4 +1,5 @@
-﻿using System;
+﻿using KawaiiEditor.GameProject;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,6 +24,26 @@ namespace KawaiiEditor
         public MainWindow()
         {
             InitializeComponent();
+            Loaded += OnMainWindowLoaded;
+        }
+
+        private void OnMainWindowLoaded(object sender, RoutedEventArgs e)
+        {
+            Loaded -= OnMainWindowLoaded;
+            OpenProjectBrowserDialogue();
+        }
+
+        private void OpenProjectBrowserDialogue()
+        {
+            var projectBrowser = new ProjectBrowserDialog();
+            if (projectBrowser.ShowDialog() == false)
+            {
+                Application.Current.Shutdown();
+            }
+            else
+            {
+                // TODO: load game project info
+            }
         }
     }
 }
