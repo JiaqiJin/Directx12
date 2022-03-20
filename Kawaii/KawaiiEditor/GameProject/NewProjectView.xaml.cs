@@ -18,9 +18,16 @@ namespace KawaiiEditor.GameProject
     /// </summary>
     public partial class NewProjectView : UserControl
     {
+        // PUBLIC
         public NewProjectView()
         {
             InitializeComponent();
+        }
+
+        // PRIVATE
+        private void OnCreate_Button_Click(object sender, RoutedEventArgs e)
+        {
+            
         }
     }
 }
