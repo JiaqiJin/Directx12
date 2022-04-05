@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.32228.343
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "EngineRuntine", "EngineRuntine\EngineRuntine.vcxproj", "{3BD5502E-B0EE-44CA-8834-E38BC1DED1F6}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3BD5502E-B0EE-44CA-8834-E38BC1DED1F6}.Debug|x64.ActiveCfg = Debug|x64
+		{3BD5502E-B0EE-44CA-8834-E38BC1DED1F6}.Debug|x64.Build.0 = Debug|x64
+		{3BD5502E-B0EE-44CA-8834-E38BC1DED1F6}.Release|x64.ActiveCfg = Release|x64
+		{3BD5502E-B0EE-44CA-8834-E38BC1DED1F6}.Release|x64.Build.0 = Release|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D25965C6-98B5-4C14-B037-3943382D44F3}
+	EndGlobalSection
+EndGlobal
