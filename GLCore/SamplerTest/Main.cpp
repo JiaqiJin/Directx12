@@ -45,6 +45,10 @@ float lastFrame = 0.0f;
 // meshes
 unsigned int planeVAO;
 
+// lighting info
+// -------------
+const glm::vec3 lightDir = glm::normalize(glm::vec3(20.0f, 50, 20.0f));
+
 int main()
 {
     // glfw: initialize and configure
@@ -254,6 +258,34 @@ void renderQuad()
 
 }
 
+glm::mat4 getLightSpaceMatrix(const float nearPlane, const float farPlane)
+{
+    const auto proj = glm::perspective(
+        glm::radians(camera.Zoom),
+        (float)SCR_WIDTH / (float)SCR_HEIGHT,
+        nearPlane,
+        farPlane
+    );
+
+    const auto corners = getFrustumCornersWorldSpace(proj, camera.GetViewMatrix());
+
+    glm::vec3 center = glm::vec3(0, 0, 0);
+    for (const auto& v : corners)
+    {
+        center += glm::vec3(v);
+    }
+    center /= corners.size();
+
+    glm::vec3 center = glm::vec3(0, 0, 0);
+    for (const auto& v : corners)
+    {
+        center += glm::vec3(v);
+    }
+    center /= corners.size();
+
+    const auto lightView = glm::lookAt(center + lightDir, center, glm::vec3(0.0f, 1.0f, 0.0f));
+}
+
 std::vector<glm::mat4> getLightSpaceMatrices()
 {
 
@@ -261,7 +293,30 @@ std::vector<glm::mat4> getLightSpaceMatrices()
 
 std::vector<glm::vec4> getFrustumCornersWorldSpace(const glm::mat4& projview)
 {
+    // Inverse for right-handed system
+    const auto inv = glm::inverse(projview);
 
+    std::vector<glm::vec4> frustumCorners;
+    for (unsigned int x = 0; x < 2; ++x)
+    {
+        for (unsigned int y = 0; y < 2; ++y)
+        {
+            for (unsigned int z = 0; z < 2; ++z)
+            {
+                // ndc
+                // xd = xc / wc ....
+                const glm::vec4 pt = inv * glm::vec4(2.0f * x - 1.0f, 2.0f * y - 1.0f, 2.0f * z - 1.0f, 1.0f);
+                frustumCorners.push_back(pt / pt.w);
+            }
+        }
+    }
+
+    return frustumCorners;
+}
+
+std::vector<glm::vec4> getFrustumCornersWorldSpace(const glm::mat4& proj, const glm::mat4& view)
+{
+    return getFrustumCornersWorldSpace(proj * view);
 }
 
 void drawCascadeVolumeVisualizers(const std::vector<glm::mat4>& lightMatrices, Shader* shader)
