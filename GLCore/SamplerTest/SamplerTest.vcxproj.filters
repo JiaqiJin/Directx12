@@ -36,4 +36,10 @@
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Resource\Shader\shadow_mapping_depth.vs" />
+    <None Include="Resource\Shader\shadow_mapping_depth.fs" />
+    <None Include="Resource\Shader\debug_quad.vs" />
+    <None Include="Resource\Shader\debug_quad_depth.fs" />
+  </ItemGroup>
 </Project>

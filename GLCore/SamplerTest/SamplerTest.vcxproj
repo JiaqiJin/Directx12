@@ -116,13 +116,14 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>E:\VisualStudio\Engine\3Party\stb_image;E:\VisualStudio\Engine\3Party\glfw-3.3.2.bin.WIN64\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\jiaqi.jin\Desktop\VS\SimpleGL\3Party\stb_image;C:\Users\jiaqi.jin\Desktop\VS\SimpleGL\3Party\glm;C:\Users\jiaqi.jin\Desktop\VS\SimpleGL\3Party\glfw-3.3.2.bin.WIN64\include;C:\Users\jiaqi.jin\Desktop\VS\SimpleGL\3Party\glew-2.1.0\include;C:\Users\jiaqi.jin\Desktop\VS\SimpleGL\3Party\assimp\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>E:\VisualStudio\Engine\3Party\glfw-3.3.2.bin.WIN64\lib-vc2019;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>glfw3.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\Users\jiaqi.jin\Desktop\VS\SimpleGL\3Party\glew-2.1.0\lib\Release\x64;C:\Users\jiaqi.jin\Desktop\VS\SimpleGL\3Party\glfw-3.3.2.bin.WIN64\lib-vc2019;C:\Users\jiaqi.jin\Desktop\VS\SimpleGL\3Party\assimp\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>glfw3.lib;glew32s.lib;assimp-vc140-mt.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -150,6 +151,12 @@
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="Shader.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resource\Shader\debug_quad_depth.fs" />
+    <None Include="Resource\Shader\debug_quad.vs" />
+    <None Include="Resource\Shader\shadow_mapping_depth.fs" />
+    <None Include="Resource\Shader\shadow_mapping_depth.vs" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
