@@ -15,10 +15,10 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Main.cpp">
+    <ClCompile Include="stb_image.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="stb_image.cpp">
+    <ClCompile Include="VCGI.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -35,13 +35,19 @@
     <ClInclude Include="Mesh.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="VoxelConeTracing.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resource\Shader\shadow_mapping_depth.vs" />
-    <None Include="Resource\Shader\shadow_mapping_depth.fs" />
-    <None Include="Resource\Shader\debug_quad.vs" />
-    <None Include="Resource\Shader\debug_quad_depth.fs" />
-    <None Include="Resource\Shader\shadow_mapping.vs" />
-    <None Include="Resource\Shader\shadow_mapping.fs" />
+    <None Include="Resource\Shader\Simple\shadow_mapping_depth.vs" />
+    <None Include="Resource\Shader\Simple\shadow_mapping_depth.fs" />
+    <None Include="Resource\Shader\Simple\debug_quad.vs" />
+    <None Include="Resource\Shader\Simple\debug_quad_depth.fs" />
+    <None Include="Resource\Shader\Simple\shadow_mapping.vs" />
+    <None Include="Resource\Shader\Simple\shadow_mapping.fs" />
+    <None Include="Resource\Shader\VCT\Voxelization.vs" />
+    <None Include="Resource\Shader\VCT\Voxelization.fs" />
+    <None Include="Resource\Shader\VCT\Voxelization.gs" />
   </ItemGroup>
 </Project>
