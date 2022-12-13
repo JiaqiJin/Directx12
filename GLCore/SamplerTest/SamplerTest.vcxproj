@@ -160,6 +160,10 @@
     <None Include="Resource\Shader\Simple\shadow_mapping.vs" />
     <None Include="Resource\Shader\Simple\shadow_mapping_depth.fs" />
     <None Include="Resource\Shader\Simple\shadow_mapping_depth.vs" />
+    <None Include="Resource\Shader\VCT\Shadow.fs" />
+    <None Include="Resource\Shader\VCT\Shadow.vs" />
+    <None Include="Resource\Shader\VCT\VoxelConeTracingShader.fs" />
+    <None Include="Resource\Shader\VCT\VoxelConeTracingShader.vs" />
     <None Include="Resource\Shader\VCT\Voxelization.fs" />
     <None Include="Resource\Shader\VCT\Voxelization.gs" />
     <None Include="Resource\Shader\VCT\Voxelization.vs" />

@@ -86,7 +86,7 @@ int main()
     glCullFace(GL_BACK);
 
     Voxel_Cone_Tracing* VCT = new Voxel_Cone_Tracing(SCR_WIDTH, SCR_HEIGHT, window);
-
+    VCT->Init();
     // render loop
     // -----------
     while (!glfwWindowShouldClose(window))
@@ -97,16 +97,16 @@ int main()
         deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
 
+        glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
         // input
         // -----
         processInput(window);
 
         // render
         // ------
-        glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-        
+        VCT->Render();
 
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
         // -------------------------------------------------------------------------------

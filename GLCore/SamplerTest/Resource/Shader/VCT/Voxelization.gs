@@ -1,5 +1,4 @@
 #version 430 core
-
 layout (triangles) in;
 layout (triangle_strip, max_vertices = 3) out;
 
@@ -16,23 +15,37 @@ in Vertex
 out Vertex_GS
 {
 	vec2 TexCoord;
+	flat int axis;
 	vec4 DepthCoord;
-	float axis;
 };
 
 void main()
 {
-	//calculate edge vectors in voxel coordinate space
-	vec3 edge1 = gl_in[0].gl_Position.xyz-gl_in[1].gl_Position.xyz;
+	vec3 e1 = gl_in[0].gl_Position.xyz - gl_in[1].gl_Position.xyz;
+	vec3 e2 = gl_in[2].gl_Position.xyz - gl_in[0].gl_Position.xyz;
 
-	vec3 edge2 = gl_in[2].gl_Position.xyz-gl_in[0].gl_Position.xyz;
+	vec3 n = normalize(cross(e1, e2));
 
-	vec3 normal = abs(cross(edge1, edge2)); 
+	n = vec3(abs(n.x), abs(n.y), abs(n.z));
 
-	if(normal.x >= normal.y && normal.x >= normal.z)
-        axis = 1;
-    else if (normal.y >= normal.x  && normal.y >= normal.z)
-        axis = 2;
-    else
-        axis = 3;
+	float nx = n.x, ny = n.y, nz = n.z;
+
+
+	if(nx >= ny && nx >= nz)
+		axis = 1;
+	else if(ny >= nx && ny >= nz)
+		axis = 2;
+	else
+		axis = 3;
+
+	mat4 pMat = axis == 1 ? ProjX : axis == 2 ? ProjY : ProjZ;
+
+	for(int i = 0; i < gl_in.length(); ++i)
+	{
+		TexCoord = vertices[i].TexCoord;
+		DepthCoord = vertices[i].DepthCoord;
+		gl_Position = pMat * gl_in[i].gl_Position;
+		EmitVertex();
+	}
+	EndPrimitive();
 }

@@ -1,7 +1,7 @@
 #version 430 core
 
-layout (location = 0) in vec3 aPos;
-layout (location = 2) in vec3 aTex;
+layout (location = 0) in vec3 position;
+layout (location = 2) in vec2 tex;
 
 uniform mat4 DepthModelViewProjectionMatrix;
 uniform mat4 ModelMatrix;
@@ -14,11 +14,9 @@ out Vertex
 
 void main()
 {
-	TexCoord = aTex;
+	TexCoord = tex;
+	DepthCoord = DepthModelViewProjectionMatrix * vec4(position, 1.0f);
+	DepthCoord.xyz = DepthCoord.xyz * 0.5f + vec3(0.5f);
 
-	// Calculate depth coord
-	DepthCoord = DepthModelViewProjectionMatrix * vec4(aPos, 1.0);
-	DepthCoord.xyz =  DepthCoord.xyz * 0.5 + vec3(0.5);
-
-	gl_Position = ModelMatrix * vec4(aPos, 1.0f);
+	gl_Position = ModelMatrix * vec4(position, 1.0f);
 }
