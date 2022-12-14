@@ -117,13 +117,13 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>C:\Users\jiaqi.jin\Desktop\VS\SimpleGL\3Party\stb_image;C:\Users\jiaqi.jin\Desktop\VS\SimpleGL\3Party\glm;C:\Users\jiaqi.jin\Desktop\VS\SimpleGL\3Party\glfw-3.3.2.bin.WIN64\include;C:\Users\jiaqi.jin\Desktop\VS\SimpleGL\3Party\glew-2.1.0\include;C:\Users\jiaqi.jin\Desktop\VS\SimpleGL\3Party\assimp\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <LanguageStandard>stdcpp17</LanguageStandard>
+      <LanguageStandard>stdcpp14</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>C:\Users\jiaqi.jin\Desktop\VS\SimpleGL\3Party\glew-2.1.0\lib\Release\x64;C:\Users\jiaqi.jin\Desktop\VS\SimpleGL\3Party\glfw-3.3.2.bin.WIN64\lib-vc2019;C:\Users\jiaqi.jin\Desktop\VS\SimpleGL\3Party\assimp\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>glfw3.lib;glew32s.lib;assimp-vc140-mt.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glfw3.lib;glew32s.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -143,19 +143,16 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="MainShadow.cpp" />
+    <ClCompile Include="RenderPass\TestPass.cpp" />
+    <ClCompile Include="Scene\Scene.cpp" />
     <ClCompile Include="stb_image.cpp" />
-    <ClCompile Include="VCGI.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="Camera.h" />
-    <ClInclude Include="Mesh.h" />
-    <ClInclude Include="Model.h" />
-    <ClInclude Include="Shader.h" />
-    <ClInclude Include="VoxelConeTracing.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resource\Shader\Simple\debug_quad_depth.fs" />
     <None Include="Resource\Shader\Simple\debug_quad.vs" />
+    <None Include="Resource\Shader\Simple\model_loading.fs" />
+    <None Include="Resource\Shader\Simple\model_loading.vs" />
     <None Include="Resource\Shader\Simple\shadow_mapping.fs" />
     <None Include="Resource\Shader\Simple\shadow_mapping.vs" />
     <None Include="Resource\Shader\Simple\shadow_mapping_depth.fs" />
@@ -167,6 +164,15 @@
     <None Include="Resource\Shader\VCT\Voxelization.fs" />
     <None Include="Resource\Shader\VCT\Voxelization.gs" />
     <None Include="Resource\Shader\VCT\Voxelization.vs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Framework\Camera.h" />
+    <ClInclude Include="Framework\Mesh.h" />
+    <ClInclude Include="Framework\Model.h" />
+    <ClInclude Include="Framework\RenderPass.h" />
+    <ClInclude Include="Framework\Shader.h" />
+    <ClInclude Include="RenderPass\TestPass.h" />
+    <ClInclude Include="Scene\Scene.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
