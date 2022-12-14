@@ -9,10 +9,8 @@
 #include "Framework/Camera.h"
 #include "Framework/Shader.h"
 #include "Framework/Model.h"
-
-#include "RenderPass/TestPass.h"
-
-#include <iostream>
+#include "Scene/Utils.h"
+#include "Scene/ShadowScene.h"
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
@@ -24,9 +22,8 @@ const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
 
 // camera
-Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
-float lastX = SCR_WIDTH / 2.0f;
-float lastY = SCR_HEIGHT / 2.0f;
+float lastX = (float)SCR_WIDTH / 2.0;
+float lastY = (float)SCR_HEIGHT / 2.0;
 bool firstMouse = true;
 
 // timing
@@ -70,25 +67,15 @@ int main()
         cout << "Error!" << endl;
     }
 
-    // tell stb_image.h to flip loaded texture's on the y-axis (before loading model).
-    stbi_set_flip_vertically_on_load(true);
-
     // configure global opengl state
     // -----------------------------
     glEnable(GL_DEPTH_TEST);
 
-    // build and compile shaders
-    // -------------------------
-    Shader ourShader("Resource/Shader/Simple/model_loading.vs", "Resource/Shader/Simple/model_loading.fs");
+    Utils* utility = new Utils();
+    utility->renderPlane();
 
-    TestPass* testPass = new TestPass("Test", "Resource/Shader/Simple/model_loading.vs", "Resource/Shader/Simple/model_loading.fs");
-    testPass->shader = ourShader;
-    // load models
-    // -----------
-    Model ourModel("Resource/Model/Backpack/backpack.obj");
-
-    // draw in wireframe
-    //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    ShadowScene* shadowScene = new ShadowScene(utility);
+    shadowScene->Init();
 
     // render loop
     // -----------
@@ -104,14 +91,7 @@ int main()
         // -----
         processInput(window);
 
-        // render
-        // ------
-        glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-        testPass->update();
-        ourModel.Draw(testPass->shader);
-
+        shadowScene->Update();
 
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
         // -------------------------------------------------------------------------------
@@ -119,8 +99,6 @@ int main()
         glfwPollEvents();
     }
 
-    // glfw: terminate, clearing all previously allocated GLFW resources.
-    // ------------------------------------------------------------------
     glfwTerminate();
     return 0;
 }
@@ -157,7 +135,6 @@ void mouse_callback(GLFWwindow* window, double xposIn, double yposIn)
 {
     float xpos = static_cast<float>(xposIn);
     float ypos = static_cast<float>(yposIn);
-
     if (firstMouse)
     {
         lastX = xpos;

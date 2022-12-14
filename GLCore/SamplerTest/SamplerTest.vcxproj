@@ -173,6 +173,8 @@
     <ClInclude Include="Framework\Shader.h" />
     <ClInclude Include="RenderPass\TestPass.h" />
     <ClInclude Include="Scene\Scene.h" />
+    <ClInclude Include="Scene\ShadowScene.h" />
+    <ClInclude Include="Scene\Utils.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
