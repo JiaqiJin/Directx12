@@ -143,13 +143,34 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Core\Application.cpp" />
+    <ClCompile Include="Core\opengl\Texture.cpp" />
+    <ClCompile Include="Core\render\shader.cpp" />
+    <ClCompile Include="Core\scene\Mesh.cpp" />
+    <ClCompile Include="Core\scene\object.cpp" />
+    <ClCompile Include="Core\scene\scene.cpp" />
+    <ClCompile Include="Core\stb_image.cpp" />
+    <ClCompile Include="Core\utils.cpp" />
     <ClCompile Include="Core\Window.cpp" />
     <ClCompile Include="Main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Core\Application.h" />
     <ClInclude Include="Core\common.h" />
+    <ClInclude Include="Core\opengl\Texture.h" />
+    <ClInclude Include="Core\opengl\VAO.h" />
+    <ClInclude Include="Core\opengl\VBO.h" />
+    <ClInclude Include="Core\render\shader.h" />
+    <ClInclude Include="Core\render\Singleton.h" />
+    <ClInclude Include="Core\scene\camera.h" />
+    <ClInclude Include="Core\scene\Light.h" />
+    <ClInclude Include="Core\scene\Mesh.h" />
+    <ClInclude Include="Core\scene\Model.h" />
+    <ClInclude Include="Core\scene\object.h" />
+    <ClInclude Include="Core\scene\scene.h" />
+    <ClInclude Include="Core\scene\vertex.h" />
+    <ClInclude Include="Core\stb_image.h" />
     <ClInclude Include="Core\Timer.h" />
+    <ClInclude Include="Core\utils.h" />
     <ClInclude Include="Core\Window.h" />
     <ClInclude Include="Demo\TestDemo.h" />
   </ItemGroup>
