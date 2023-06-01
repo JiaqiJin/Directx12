@@ -139,10 +139,18 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Component\Component.cpp" />
+    <ClCompile Include="Component\GameObject.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="Renderer\Mesh.cpp" />
+    <ClCompile Include="Renderer\MeshRenderer.cpp" />
     <ClCompile Include="Texture2D.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Component\Component.h" />
+    <ClInclude Include="Component\GameObject.h" />
+    <ClInclude Include="Renderer\Mesh.h" />
+    <ClInclude Include="Renderer\MeshRenderer.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="Texture2D.h" />
     <ClInclude Include="Vertex_Data.h" />
